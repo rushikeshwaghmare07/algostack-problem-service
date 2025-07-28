@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const { PORT } = require("./config/server.config");
 const apiRouter = require("./routes");
 const errorHandler = require("./utils/errorHandler");
+const connectToDatabase = require("./config/db.config");
 
 const app = express();
 
@@ -19,6 +20,15 @@ app.get("/ping", (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on PORT: ${PORT}`);
-});
+(async () => {
+  try {
+    await connectToDatabase();
+
+    app.listen(PORT, () => {
+      console.log(`Server running on PORT: ${PORT}`);
+    });
+  } catch (error) {
+    console.log("Failed to start server:", error);
+    process.exit(1);
+  }
+})();
