@@ -5,6 +5,7 @@ const { PORT } = require("./config/server.config");
 const apiRouter = require("./routes");
 const errorHandler = require("./utils/errorHandler");
 const connectToDatabase = require("./config/db.config");
+const logger = require("./config/logger.config");
 
 const app = express();
 
@@ -25,10 +26,10 @@ app.use(errorHandler);
     await connectToDatabase();
 
     app.listen(PORT, () => {
-      console.log(`Server running on PORT: ${PORT}`);
+      logger.info(`Server running on PORT: ${PORT}`);
     });
   } catch (error) {
-    console.log("Failed to start server:", error);
+    logger.error("Failed to start server:", error);
     process.exit(1);
   }
 })();
